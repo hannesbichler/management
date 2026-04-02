@@ -1,0 +1,39 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  position: relative;
+  font-family: "Roboto", sans-serif;
+  background: #f4f7fa;
+}
+
+.eudrs-state-invalid {
+  color: #EA3323;
+}
+
+.eudrs-state-initial {
+  color: gray;
+}
+
+.eudrs-state-valid {
+  color: green;
+}
+
+.top-center div {
+  align-items: flex-start !important; /* Aligns content to the top */
+  overflow-y: auto;   /* enables vertical scroll */
+  overflow-x: hidden;
+  max-height: 100%;   /* restricts to tile height */
+
+}
+
+.mat-mdc-header-row {
+  position: sticky;        /* fix header */
+  top: 0;
+  z-index: 2;              /* keep above body rows */
+  background: #fafafa;     /* header background */
+  overflow: hidden;
+}

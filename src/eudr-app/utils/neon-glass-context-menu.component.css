@@ -1,0 +1,96 @@
+
+
+
+.neon-glass-context-menu {
+  position: fixed;
+  z-index: 1000;
+  min-width: 220px;
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0.12) 100%);
+  border: 1.5px solid #d32f2f; /* Material Red */
+  box-shadow:
+    0 8px 48px 0 rgba(120,0,0,0.18),
+    0 0 60px 20px rgba(120,0,0,0.10),
+    0 2px 16px 0 rgba(80,0,0,0.25);
+  backdrop-filter: blur(4px) saturate(20%);
+  -webkit-backdrop-filter: blur(4px) saturate(20%);
+  border-radius: 28px;
+  border: 2.5px solid rgba(255,255,255,0.18);
+  padding: 14px 0;
+  animation: red-glow 0.25s;
+  overflow: hidden;
+  font-family: 'Segoe UI', 'Roboto', 'Arial', sans-serif;
+}
+
+
+
+.neon-glass-context-menu ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+
+
+.neon-glass-context-menu li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 36px;
+  color: #f5f5f5;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1.08rem;
+  border-radius: 18px;
+  margin: 3px 0;
+  background: rgba(255,255,255,0.08);
+  box-shadow: 0 0 0 transparent;
+  transition: background 0.15s, color 0.15s, box-shadow 0.15s, border 0.15s, transform 0.15s;
+  border: 1.5px solid transparent;
+  letter-spacing: 0.7px;
+  position: relative;
+}
+
+.neon-glass-context-menu li:hover {
+  background: linear-gradient(90deg, rgba(211,47,47,0.18) 0%, rgba(211,47,47,0.08) 100%);
+  color: #fff;
+  box-shadow: 0 0 24px #d32f2f, 0 0 48px #d32f2f;
+  border: 1.5px solid #d32f2f;
+  text-shadow: 0 0 12px #d32f2f;
+  transform: scale(1.04);
+}
+
+@keyframes red-glow {
+  0% {
+    box-shadow: 0 0 0 #d32f2f;
+    border-color: rgba(211,47,47,0.1);
+  }
+  60% {
+    box-shadow: 0 0 48px #d32f2f, 0 0 96px #d32f2f;
+    border-color: #d32f2f;
+  }
+  100% {
+    box-shadow: 0 0 24px #d32f2f, 0 0 48px #d32f2f;
+    border-color: #d32f2f;
+  }
+}
+
+.neon-glass-context-menu li .icon {
+  filter: drop-shadow(0 0 6px #d32f2f);
+}
+.neon-glass-context-menu li .submenu-arrow {
+  color: #d32f2f;
+  filter: drop-shadow(0 0 4px #d32f2f);
+}
+
+.neon-glass-context-menu li .submenu-arrow {
+  margin-left: auto;
+  color: #00fff7;
+  font-size: 1.1em;
+  filter: drop-shadow(0 0 4px #00fff7);
+}
+
+.neon-glass-context-menu .submenu {
+  background: linear-gradient(135deg, rgba(60,60,60,0.92) 0%, rgba(120,120,120,0.85) 100%);
+  border: 2px solid #d32f2f;
+  box-shadow: 0 8px 32px 0 rgba(120,0,0,0.18), 0 0 40px 10px rgba(120,0,0,0.10);
+}

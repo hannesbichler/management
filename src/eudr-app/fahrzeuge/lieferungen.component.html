@@ -1,0 +1,181 @@
+<div class="lieferungen-container mat-elevation-z8">
+  @if (dataSource.isLoadingResults() || dataSource.isRateLimitReached()) {
+  <div class="lieferungen-loading-shade">
+    @if (dataSource.isLoadingResults()) {
+    <mat-spinner></mat-spinner>
+    }
+    @if (dataSource.isRateLimitReached()) {
+    <div class="lieferungen-not-loaded">
+      Es konnten keine Lieferungen geladen werden.
+    </div>
+    }
+  </div>
+  }
+
+  <div class="lieferungen-table-container">
+    <mat-grid-list cols="6" rowHeight="5:1">
+      <mat-grid-tile>
+        <form [formGroup]="formGroupLsnr">
+          <mat-form-field class="w-100">
+            <mat-label>Bestellnummer</mat-label>
+            <input formControlName="textFilter" matInput placeholder="Bestellnummer">
+          </mat-form-field>
+        </form>
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <form [formGroup]="formGroupLieferant">
+          <mat-form-field class="w-100">
+            <mat-label>Lieferant</mat-label>
+            <input formControlName="textFilter" matInput placeholder="Lieferant">
+          </mat-form-field>
+        </form>
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <form [formGroup]="formGroupZellstoffkat">
+          <mat-form-field class="w-100">
+            <mat-label>Zellstoffsorte</mat-label>
+            <input formControlName="textFilter" matInput placeholder="Zellstoffsorte">
+          </mat-form-field>
+        </form>
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <form [formGroup]="formGroupEmptyOrder">
+          <!--  <mat-form-field class="w-100"> -->
+          <mat-checkbox formControlName="checkedFilter">
+            Bestellnummer leer
+          </mat-checkbox>
+          <!-- </mat-form-field> -->
+        </form>
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <form [formGroup]="formGroupEmptyZellstoff">
+          <!--  <mat-form-field class="w-100"> -->
+          <mat-checkbox formControlName="checkedFilter">
+            Zellstoffsorte leer
+          </mat-checkbox>
+          <!-- </mat-form-field> -->
+        </form>
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <form [formGroup]="formGroupEudrStatus">
+          <!--  <mat-form-field class="w-100"> -->
+          <mat-checkbox formControlName="checkedFilter">
+            EUDR Valide
+          </mat-checkbox>
+          <!-- </mat-form-field> -->
+        </form>
+      </mat-grid-tile>
+    </mat-grid-list>
+    <table mat-table class="lieferungen-table" matSort matSortActive="lsnr" matSortDisableClear matSortDirection="asc">
+
+      <!-- Checkbox Column -->
+      <ng-container matColumnDef="select">
+        <th mat-header-cell *matHeaderCellDef>
+          <mat-checkbox (change)="$event ? toggleAllRows() : null" [checked]="selection.hasValue() && isAllSelected()"
+            [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
+          </mat-checkbox>
+        </th>
+        <td mat-cell *matCellDef="let row">
+          <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+            [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
+          </mat-checkbox>
+        </td>
+      </ng-container>
+
+      <!-- bestellnummer/lsnr Column -->
+      <ng-container matColumnDef="lsnr">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>
+          Bestellnummer</th>
+        <td mat-cell *matCellDef="let row">{{row.lsnr}}</td>
+      </ng-container>
+
+      <!-- lsnrlieferant Column -->
+      <ng-container matColumnDef="lsnrlieferant">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Lieferscheinnr Lieferant</th>
+        <td mat-cell *matCellDef="let row">{{row.lsnrlieferant}}</td>
+      </ng-container>
+
+      <!-- lieferant Column -->
+      <ng-container matColumnDef="lieferantname">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Lieferant</th>
+        <td mat-cell *matCellDef="let row">{{row.lieferantname}}</td>
+      </ng-container>
+
+      <!-- lieferdatum Column -->
+      <ng-container matColumnDef="lieferdate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>
+          Lieferdatum
+        </th>
+        <td mat-cell *matCellDef="let row">{{row.lieferdate | date:'dd.MM.yyyy'}}</td>
+      </ng-container>
+
+      <!-- produktname Column -->
+      <ng-container matColumnDef="prodname">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>
+          Produktname
+        </th>
+        <td mat-cell *matCellDef="let row">{{row.prodname}}</td>
+      </ng-container>
+
+      <!-- zellstoffsorte Column -->
+      <ng-container matColumnDef="zellstoffkat">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Zellstoffsorte</th>
+        <td mat-cell *matCellDef="let row">{{row.zellstoffkat}}</td>
+      </ng-container>
+
+      <!-- Menge Column -->
+      <ng-container matColumnDef="menge">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Menge</th>
+        <td mat-cell *matCellDef="let row">{{row.menge | number: '1.2-2'}}</td>
+      </ng-container>
+
+      <!-- Eurd status Column -->
+      <ng-container matColumnDef="valide">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Eudr Status</th>
+        <td mat-cell *matCellDef="let row">
+          <mat-icon [class]='verificationIconClass(row.valide)'
+            [matTooltip]='verificationTooltip(row.valide)'>{{verificationIcon(row.valide)}}</mat-icon>
+        </td>
+      </ng-container>
+
+      <!-- komplett verbucht/gesperrt Column -->
+      <ng-container matColumnDef="gesperrt">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>gesperrt</th>
+        <td mat-cell *matCellDef="let row">
+          <mat-checkbox [checked]=isVerbucht(row.gesperrt) [disabled]="true">
+          </mat-checkbox>
+        </td>
+      </ng-container>
+
+      <!-- komplett validiert Column
+      <ng-container matColumnDef="validiert">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>bereits validiert</th>
+        <td mat-cell *matCellDef="let row">
+          <mat-checkbox [checked]=row.validiert [disabled]="true">
+          </mat-checkbox>
+        </td>
+      </ng-container>-->
+
+      <ng-container matColumnDef="add">
+        <th mat-header-cell *matHeaderCellDef>
+          <button mat-mini-fab (click)="addLieferung()" matTooltip="Lieferung einfügen">
+            <mat-icon>add</mat-icon>
+          </button>
+          <button mat-mini-fab matTooltip="Lieferungen importieren"
+            (click)="importLieferungen()"><mat-icon>import_export</mat-icon></button>
+          <button mat-mini-fab [disabled]="checkIfDisabled()" matTooltip="Ausgewählte Lieferungen löschen"
+            (click)="deleteLieferungen()"><mat-icon>delete</mat-icon></button>
+        </th>
+        <td mat-cell *matCellDef="let row">
+          <button mat-mini-fab (click)="editLieferung(row)" matTooltip="Lieferung bearbeiten"><mat-icon>edit</mat-icon></button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </div>
+  <mat-paginator class="demo-paginator" [length]=dataSource.resultsLength() [pageSize]=pageSize
+    [showFirstLastButtons]="showFirstLastButtons" [pageSizeOptions]="showPageSizeOptions ? pageSizeOptions : []"
+    [pageIndex]="pageIndex" aria-label="Select page">
+  </mat-paginator>

@@ -1,0 +1,34 @@
+<h2 mat-dialog-title>{{this.data.caption}}</h2>
+<mat-dialog-content class="mat-typography">
+  <mat-grid-list cols="4" rowHeight="3:1">
+    <mat-grid-tile>
+      <mat-form-field >
+        <mat-label>Produktionslot Lieferant</mat-label>
+        <input matInput placeholder="Produktionslot Lieferant" [(ngModel)]="this.data.eudr.prodlotlieferant" required/>
+      </mat-form-field>
+    </mat-grid-tile>
+    <mat-grid-tile>
+      <mat-form-field  >
+        <mat-label>Referenznummer</mat-label>
+        <input matInput placeholder="Referenznummer" [(ngModel)]="this.data.eudr.referenznr"/>
+      </mat-form-field>
+    </mat-grid-tile>
+    <mat-grid-tile>
+      <mat-form-field  >
+        <mat-label>Verifikationsnummer</mat-label>
+        <input matInput placeholder="Verifikationsnummer" [(ngModel)]="this.data.eudr.verifnr"/>
+      </mat-form-field>
+    </mat-grid-tile>
+    <mat-grid-tile>
+      <mat-form-field  >
+        <mat-label>Menge</mat-label>
+        <input matInput placeholder="Menge" [(ngModel)]="this.data.eudr.menge" type="number"/>
+      </mat-form-field>
+    </mat-grid-tile>
+  </mat-grid-list>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-raised-button (click)="this.dialogRef.close(true)">Speichern</button>
+  <button mat-raised-button mat-dialog-close cdkFocusInitial (click)="this.dialogRef.close(false)">Abbrechen</button>
+</mat-dialog-actions>

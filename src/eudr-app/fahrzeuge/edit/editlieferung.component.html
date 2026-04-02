@@ -1,0 +1,143 @@
+<h2 mat-dialog-title>{{this.data.caption}}</h2>
+
+<mat-grid-list cols="1" rowHeight="80px">
+  <mat-grid-tile [rowspan]="2">
+    <mat-dialog-content class="mat-typography">
+      <mat-grid-list cols="4" rowHeight="4:1">
+        <mat-grid-tile>
+          <mat-form-field>
+            <mat-label>Bestellnummer</mat-label>
+            <input matInput placeholder="Bestellnummer" [(ngModel)]="this.data.lieferung.lsnr" required [disabled]="checkIfDisabled()"/>
+          </mat-form-field>
+        </mat-grid-tile>
+        <mat-grid-tile>
+          <mat-form-field>
+            <mat-label>Lieferscheinnummer</mat-label>
+            <input matInput placeholder="Lieferscheinnummer" [(ngModel)]="this.data.lieferung.lsnrlieferant" [disabled]="checkIfDisabled()"/>
+          </mat-form-field>
+        </mat-grid-tile>
+        <mat-grid-tile>
+          <mat-form-field>
+            <mat-label>Lieferant</mat-label>
+            <mat-select [(value)]="this.data.lieferung.lieferant" [compareWith]="compareFnLieranten" [disabled]="checkIfDisabled()">
+              <mat-option *ngFor='let lieferant of (lieferanten$ | async)?.items'
+                [value]="lieferant">{{lieferant.name}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </mat-grid-tile>
+        <mat-grid-tile>
+          <mat-form-field>
+            <mat-label>Lieferdatum</mat-label>
+            <input matInput [matDatepicker]="picker" [(ngModel)]="this.data.lieferung.lieferdate" readonly="true" [disabled]="checkIfDisabled()">
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+        </mat-grid-tile>
+        <mat-grid-tile>
+          <mat-form-field>
+            <mat-label>Produktname</mat-label>
+            <input matInput placeholder="Produktname" [(ngModel)]="this.data.lieferung.prodname" [disabled]="checkIfDisabled()"/>
+          </mat-form-field>
+        </mat-grid-tile>
+        <mat-grid-tile>
+          <mat-form-field>
+            <mat-label>Zellstoffsorte</mat-label>
+            <mat-select [(value)]="this.data.lieferung.zellstoff" [compareWith]="compareFnZellstoff" [disabled]="checkIfDisabled()">
+              <mat-option *ngFor='let kat of (kategorien$ | async)?.items' [value]="kat">{{kat.name}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </mat-grid-tile>
+        <mat-grid-tile>
+          <mat-checkbox [(ngModel)]="this.data.lieferung.gesperrt" (change)="onFeatureEnabledChange($event)">
+            gesperrt
+          </mat-checkbox>
+        </mat-grid-tile>
+        <mat-grid-tile>
+          <mat-checkbox #validCheckBox [(ngModel)]="this.data.lieferung.valide" disabled="true">
+            bereits validiert
+          </mat-checkbox>
+        </mat-grid-tile>
+        <mat-grid-tile>
+        </mat-grid-tile>
+      </mat-grid-list>
+    </mat-dialog-content>
+  </mat-grid-tile>
+  <mat-grid-tile [rowspan]="8" class="top-center">
+    <table mat-table class="mat-elevation-z8" matSort matSortActive="name" matSortDisableClear matSortDirection="asc">
+
+      <!-- Checkbox Column -->
+      <ng-container matColumnDef="select">
+        <th mat-header-cell *matHeaderCellDef>
+          <mat-checkbox (change)="$event ? toggleAllRows() : null" [checked]="selection.hasValue() && isAllSelected()" [disabled]="checkIfDisabled()"
+            [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()" [disabled]="checkIfDisabled()">
+          </mat-checkbox>
+        </th>
+        <td mat-cell *matCellDef="let row">
+          <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null" [disabled]="checkIfDisabled()"
+            [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
+          </mat-checkbox>
+        </td>
+      </ng-container>
+
+      <!-- prodlotlieferant Column -->
+      <ng-container matColumnDef="prodlotlieferant">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>
+          Produktionslot Lieferant
+        </th>
+        <td mat-cell *matCellDef="let row">{{row.prodlotlieferant}}</td>
+      </ng-container>
+      <!-- referenznr Column -->
+      <ng-container matColumnDef="referenznr">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>
+          Referenznummer
+        </th>
+        <td mat-cell *matCellDef="let row">{{row.referenznr}}</td>
+      </ng-container>
+      <!-- verifnr Column -->
+      <ng-container matColumnDef="verifnr">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>
+          Verifikationsnummer
+        </th>
+        <td mat-cell *matCellDef="let row">{{row.verifnr}}</td>
+      </ng-container>
+      <!-- verifnr Column -->
+      <ng-container matColumnDef="menge">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>
+          Menge
+        </th>
+        <td mat-cell *matCellDef="let row">{{row.menge}}</td>
+      </ng-container>
+      <!-- status Column -->
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>
+          Eudr Status
+        </th>
+        <td mat-cell *matCellDef="let row">
+          <mat-icon [class]='verificationIconClass(row.status)'
+            [matTooltip]='verificationTooltip(row.status)' (click)="validieren(row, true)">{{verificationIcon(row.status)}}</mat-icon>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="add">
+        <th mat-header-cell *matHeaderCellDef>
+          <button mat-mini-fab (click)="addEudr()" [disabled]="checkIfDisabled()">
+            <mat-icon>add</mat-icon>
+          </button>
+          <button mat-mini-fab [disabled]="checkIfDisabledForDelete()"
+            (click)="deleteEudrs()"><mat-icon>delete</mat-icon></button>
+        </th>
+        <td mat-cell *matCellDef="let row">
+          <button mat-mini-fab (click)="editEudr(row)" [disabled]="checkIfDisabled()"><mat-icon>edit</mat-icon></button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </mat-grid-tile>
+</mat-grid-list>
+<mat-dialog-actions align="end">
+  <button mat-raised-button (click)="this.alleValidieren()" [disabled]="checkIfDisabled()">Alle Validieren</button>
+  <button mat-raised-button (click)="this.dialogRef.close(true)" >Speichern</button>
+  <button mat-raised-button mat-dialog-close cdkFocusInitial (click)="this.dialogRef.close(false)">Abbrechen</button>
+</mat-dialog-actions>

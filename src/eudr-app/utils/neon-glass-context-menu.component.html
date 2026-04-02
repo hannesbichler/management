@@ -1,0 +1,11 @@
+<div
+  class="neon-glass-context-menu"
+  *ngIf="visible"
+  [ngStyle]="{ left: x + 'px', top: y + 'px' }"
+>
+  <ul>
+    <li *ngFor="let item of menuItems" (click)="onMenuItemClick(item)">
+      {{ item.label }}
+    </li>
+  </ul>
+</div>

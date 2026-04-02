@@ -1,0 +1,13 @@
+<div class="app-container">
+  <div class="app-content">
+    <app-left-sidebar
+      [isLeftSidebarCollapsed]="isLeftSidebarCollapsed()"
+      (changeIsLeftSidebarCollapsed)="changeIsLeftSidebarCollapsed($event)"
+    />
+
+    <app-main
+      [isLeftSidebarCollapsed]="isLeftSidebarCollapsed()"
+      [screenWidth]="screenWidth()"
+    />
+  </div>
+</div>

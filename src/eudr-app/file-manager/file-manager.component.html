@@ -1,0 +1,82 @@
+<app-neon-glass-context-menu
+  [menuItems]="contextMenuItems"
+  [visible]="contextMenuVisible"
+  [x]="contextMenuX"
+  [y]="contextMenuY"
+  (menuItemClick)="onMenuItemClick($event)"
+  (menuClose)="onMenuClose()"
+></app-neon-glass-context-menu>
+<!--<mat-tab-group>
+  <mat-tab label="Lieferungen zum Import">-->
+
+    <div class="file-manager-container" (contextmenu)="onRightClick($event)">
+
+      <!-- Breadcrumb -->
+      <div class="breadcrumb">
+        <!--<span class="crumb link" (click)="navigateTo(null)">Root</span>-->
+        <ng-container *ngFor="let segment of currentPathSegments; let i = index">
+          <span> / </span>
+          <span class="crumb link" (click)="navigateTo(i)">{{ segment }}</span>
+        </ng-container>
+      </div>
+
+      <!-- Toolbar -->
+      <div class="fm-toolbar" *ngIf="showUpload">
+        <button mat-raised-button color="primary" (click)="fileInput.click()">
+          <mat-icon>upload</mat-icon>
+          <span>Upload</span>
+        </button>
+        <input #fileInput type="file" multiple hidden (change)="onFileInputChange($event)" />
+      </div>
+
+      <!-- Drag & drop zone -->
+      <div class="dropzone" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)" (drop)="onDrop($event)" *ngIf="showUpload"
+        [class.dropzone-hover]="isHovering">
+        <mat-icon>cloud_upload</mat-icon>
+        <p>Drag & drop files here or click "Upload"</p>
+      </div>
+
+      <!-- Active uploads -->
+      <div *ngIf="uploads.length && showUpload" class="uploads">
+        <h3>Uploads</h3>
+        <div *ngFor="let u of uploads" class="upload-item">
+          <span>{{ u.file.name }}</span>
+          <mat-progress-bar mode="determinate" [value]="u.progress"></mat-progress-bar>
+          <span class="upload-percent">{{ u.progress }}%</span>
+        </div>
+      </div>
+
+      <!-- Folder & file list -->
+      <mat-list>
+        <!-- Folders -->
+        <mat-list-item *ngFor="let folder of folders" (click)="openFolder(folder)" class="clickable">
+          <mat-icon matListIcon>folder</mat-icon>
+          <div matLine>{{ folder.name }}</div>
+        </mat-list-item>
+
+        <!-- Files -->
+        <mat-list-item *ngFor="let file of files">
+          <!--<mat-icon matListIcon>insert_drive_file</mat-icon>-->
+          <div matLine>{{ file.name }}</div>
+          <div matLine class="secondary">
+            {{ file.size | number }} bytes · {{ file.lastModified }}
+          </div>
+          <span class="spacer"></span>
+          <button mat-icon-button (click)="preview(file)" matTooltip="Preview">
+            <mat-icon>visibility</mat-icon>
+          </button>
+          <button mat-icon-button (click)="download(file)" matTooltip="Download">
+            <mat-icon>download</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" (click)="delete(file)" matTooltip="Delete">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </mat-list-item>
+      </mat-list>
+
+    </div>
+
+  <!--</mat-tab>
+  <mat-tab label="Bereits Importiert"> Content 2 </mat-tab>
+</mat-tab-group>
+-->

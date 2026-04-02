@@ -1,0 +1,13 @@
+<h2 mat-dialog-title>{{this.data.caption}}</h2>
+<mat-dialog-content class="mat-typography">
+  <mat-form-field style="width: 100%; height: 240px;">
+    <mat-label>Export Meldungen</mat-label>
+    <textarea matInput [(ngModel)]="this.message" style="height: 210px;" readonly></textarea>
+  </mat-form-field>
+  Nach dem Klick auf Fertigstellen werden auf die SAP Export Dateien Seite weitergeleitet.
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-raised-button (click)="exportToSAP()" [disabled]="checkIfDisabledImport()">Exportieren</button>
+  <button mat-raised-button (click)="this.dialogRef.close(true)" [disabled]="checkIfDisabledFertig()">Fertigstellen</button>
+  <button mat-raised-button mat-dialog-close cdkFocusInitial (click)="this.dialogRef.close(false)">Schließen</button>
+</mat-dialog-actions>

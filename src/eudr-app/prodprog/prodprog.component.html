@@ -1,0 +1,150 @@
+<div class="prodprog-container mat-elevation-z8">
+  @if (dataSource.isLoadingResults() || dataSource.isRateLimitReached()) {
+  <div class="prodprog-loading-shade">
+    @if (dataSource.isLoadingResults()) {
+    <mat-spinner></mat-spinner>
+    }
+    @if (dataSource.isRateLimitReached()) {
+    <div class="prodprog-not-loaded">
+      Es konnten keine Produktionszuordnungen geladen werden.
+    </div>
+    }
+  </div>
+  }
+
+  <div class="prodprog-table-container">
+    <mat-grid-list cols="6" rowHeight="5:1">
+      <mat-grid-tile>
+        <form [formGroup]="formGroupPrognr">
+          <mat-form-field class="w-100">
+            <mat-label>Programmnummer</mat-label>
+            <input formControlName="textFilter" matInput placeholder="Programmnummer">
+          </mat-form-field>
+        </form>
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <form [formGroup]="formGroupJahr">
+          <mat-form-field class="w-100">
+            <mat-label>Jahr</mat-label>
+            <input formControlName="textFilter" matInput placeholder="Jahr">
+          </mat-form-field>
+        </form>
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <form [formGroup]="Zellstoffsorte">
+          <mat-form-field class="w-100">
+            <mat-label>Zellstoffsorte</mat-label>
+            <input formControlName="textFilter" matInput placeholder="Zellstoffsorte">
+          </mat-form-field>
+        </form>
+      </mat-grid-tile>
+    </mat-grid-list>
+    <!-- 'Name', 'EORI', 'UID', 'Straße', 'PLZ', 'Stadt', 'Land' -->
+    <table mat-table class="prodprog-table" matSort matSortActive="start" matSortDisableClear matSortDirection="asc">
+
+      <!-- Checkbox Column -->
+      <ng-container matColumnDef="select">
+        <th mat-header-cell *matHeaderCellDef>
+          <mat-checkbox (change)="$event ? toggleAllRows() : null" [checked]="selection.hasValue() && isAllSelected()"
+            [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
+          </mat-checkbox>
+        </th>
+        <td mat-cell *matCellDef="let row">
+          <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+            [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
+          </mat-checkbox>
+        </td>
+      </ng-container>
+
+      <!-- address Column
+      <ng-container matColumnDef="prog_nr">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>
+          Prog nr
+        </th>
+        <td mat-cell *matCellDef="let row">{{row.prog_nr}}</td>
+      </ng-container> -->
+
+      <!-- address Column -->
+      <ng-container matColumnDef="prodprog_nr">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>
+          Programmnummer
+        </th>
+        <td mat-cell *matCellDef="let row">{{row.prodprog_nr}}</td>
+      </ng-container>
+
+      <!-- name Column -->
+      <ng-container matColumnDef="start">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>
+          Start </th>
+        <td mat-cell *matCellDef="let row">{{row.start | date:'dd.MM.yyyy'}}</td>
+      </ng-container>
+
+      <!-- eori Column -->
+      <ng-container matColumnDef="ende">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Ende</th>
+        <td mat-cell *matCellDef="let row">{{row.ende | date:'dd.MM.yyyy'}}</td>
+      </ng-container>
+
+      <!-- uid Column -->
+      <ng-container matColumnDef="jahr">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Jahr</th>
+        <td mat-cell *matCellDef="let row">{{row.jahr}}</td>
+      </ng-container>
+
+      <!-- zip Column -->
+      <ng-container matColumnDef="zellstoffkats">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Zellstoffsorte</th>
+        <td mat-cell *matCellDef="let row">{{row.zellstoffkats}}</td>
+      </ng-container>
+
+      <!-- zip Column -->
+      <ng-container matColumnDef="mengevorg">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Menge Vorgabe kg</th>
+        <td mat-cell *matCellDef="let row">{{row.mengevorg}}</td>
+      </ng-container>
+
+      <!-- zip Column -->
+      <ng-container matColumnDef="mengezuord">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Menge aus Lieferungen kg</th>
+        <td mat-cell *matCellDef="let row">{{row.mengezuord}}</td>
+      </ng-container>
+
+      <!-- zip Column --
+      <ng-container matColumnDef="beendet">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>beendet</th>
+        <td mat-cell *matCellDef="let row">{{row.beendet}}</td>
+      </ng-container> -->
+      <!-- komplett verbucht/gesperrt Column -->
+      <ng-container matColumnDef="beendet">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>beendet</th>
+        <td mat-cell *matCellDef="let row">
+          <mat-checkbox [checked]=isBeendet(row.beendet) [disabled]="true">
+          </mat-checkbox>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="add">
+        <th mat-header-cell *matHeaderCellDef>
+          <button mat-mini-fab (click)="addProdprog()" matTooltip="Produktionsprogramm einfügen">
+            <mat-icon>add</mat-icon>
+          </button>
+          <button mat-mini-fab [disabled]="checkIfDisabled()"matTooltip="Produktionsprogramme exportieren"
+            (click)="exportProdprogs()"><mat-icon>import_export</mat-icon></button>
+          <button mat-mini-fab [disabled]="checkIfDisabled()" matTooltip="Produktionsprogramme löschen"
+            (click)="deleteProdprog()"><mat-icon>delete</mat-icon></button>
+        </th>
+        <td mat-cell *matCellDef="let row">
+          <button mat-mini-fab (click)="editProdprog(row)" matTooltip="Produktionsprogramm bearbeiten"><mat-icon>edit</mat-icon></button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </div>
+
+  <mat-paginator #paginator class="demo-paginator" [length]=dataSource.resultsLength() [pageSize]=pageSize [disabled]=disabled
+    [showFirstLastButtons]="showFirstLastButtons" [pageSizeOptions]="showPageSizeOptions ? pageSizeOptions : []"
+    [hidePageSize]="hidePageSize" [pageIndex]="pageIndex" aria-label="Select page">
+  </mat-paginator>
+</div>

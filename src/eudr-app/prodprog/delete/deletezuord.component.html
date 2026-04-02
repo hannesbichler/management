@@ -1,0 +1,10 @@
+<div mat-dialog-content>
+  <p>Möchten Sie die Zuordnungen löschen?</p>
+  <li *ngFor="let zuordnung of data.zuordnungen">
+    {{zuordnung.prodlotlieferant}} - {{zuordnung.referenznr}} - {{zuordnung.verifnr}}  - max {{zuordnung.menge}} kg
+  </li>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="yes()">Ja</button>
+  <button mat-button cdkFocusInitial (click)="no()">Nein</button>
+</div>

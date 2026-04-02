@@ -1,0 +1,33 @@
+<h2 mat-dialog-title></h2>
+<mat-dialog-content class="mat-typography">
+
+
+  <div
+  class="dropzone"
+  (dragover)="onDragOver($event)"
+  (dragleave)="onDragLeave($event)"
+  (drop)="onDrop($event)"
+  [class.dropzone-hover]="isHovering"
+>
+  <p>Drag & drop files here</p>
+  <p>or</p>
+  <input type="file" (change)="onFileSelected($event)" />
+</div>
+
+
+  <button mat-raised-button color="primary" (click)="uploadFile()" [disabled]="!file">
+    Upload
+  </button>
+
+  <div *ngIf="progress >= 0">
+    <mat-progress-bar mode="determinate" [value]="progress"></mat-progress-bar>
+    <p>{{ progress }}%</p>
+  </div>
+
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-raised-button >Speichern</button>
+  <button mat-raised-button mat-dialog-close cdkFocusInitial >Abbrechen</button>
+</mat-dialog-actions>

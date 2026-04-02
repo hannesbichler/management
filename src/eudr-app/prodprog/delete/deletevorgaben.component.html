@@ -1,0 +1,10 @@
+<div mat-dialog-content>
+  <p>Möchten Sie die Vorgaben löschen?</p>
+  <li *ngFor="let vorgabe of data.vorgaben">
+    {{vorgabe.zellstoffkatname}} - {{vorgabe.menge}} kg
+  </li>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="yes()">Ja</button>
+  <button mat-button cdkFocusInitial (click)="no()">Nein</button>
+</div>

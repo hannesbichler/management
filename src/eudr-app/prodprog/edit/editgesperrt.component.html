@@ -1,0 +1,10 @@
+<h2 mat-dialog-title>Möchten Sie das Produktionsprogramm entsperren?</h2>
+
+<mat-dialog-content class="mat-typography">
+  <p>Wenn Sie das Produktionsprogramm entsperren, können inkonsistente Buchungen auftreten.</p>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-raised-button (click)="this.dialogRef.close(true)" >Ja</button>
+  <button mat-raised-button mat-dialog-close cdkFocusInitial (click)="this.dialogRef.close(false)">Nein</button>
+</mat-dialog-actions>

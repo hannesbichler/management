@@ -1,0 +1,178 @@
+<h2 mat-dialog-title>{{this.data.caption}}</h2>
+
+<mat-grid-list cols="1" rowHeight="80px">
+  <mat-grid-tile [rowspan]="2">
+    <mat-dialog-content class="mat-typography">
+      <mat-grid-list cols="4" rowHeight="4:1">
+        <mat-grid-tile>
+          <mat-form-field>
+            <mat-label>Programmnummer</mat-label>
+            <input matInput placeholder="Programmnummer" [(ngModel)]="this.data.prodprog.prodprog_nr" required
+              [disabled]="checkIfDisabled()" />
+          </mat-form-field>
+        </mat-grid-tile>
+        <mat-grid-tile>
+          <mat-form-field>
+            <mat-label>Jahr</mat-label>
+            <input matInput placeholder="Jahr" [(ngModel)]="this.data.prodprog.jahr" type="number"
+              [disabled]="checkIfDisabled()" />
+          </mat-form-field>
+        </mat-grid-tile>
+        <mat-grid-tile>
+          <mat-form-field>
+            <mat-label>Start</mat-label>
+            <input matInput [matDatepicker]="pickerStart" [(ngModel)]="this.data.prodprog.start" readonly="true"
+              [disabled]="checkIfDisabled()">
+            <mat-datepicker-toggle matIconSuffix [for]="pickerStart">
+
+            </mat-datepicker-toggle>
+            <mat-datepicker #pickerStart></mat-datepicker>
+          </mat-form-field>
+        </mat-grid-tile>
+        <mat-grid-tile>
+          <mat-form-field>
+            <mat-label>Ende</mat-label>
+            <input matInput [matDatepicker]="pickerEnde" [(ngModel)]="this.data.prodprog.ende" readonly="true"
+              [disabled]="checkIfDisabled()">
+            <mat-datepicker-toggle matIconSuffix [for]="pickerEnde"></mat-datepicker-toggle>
+            <mat-datepicker #pickerEnde></mat-datepicker>
+          </mat-form-field>
+        </mat-grid-tile>
+        <mat-grid-tile>
+          <mat-checkbox [(ngModel)]="this.data.prodprog.beendet" (change)="onFeatureEnabledChange($event)">
+            beendet
+          </mat-checkbox>
+        </mat-grid-tile>
+      </mat-grid-list>
+    </mat-dialog-content>
+  </mat-grid-tile>
+  <mat-grid-tile [rowspan]="4" class="top-center">
+
+    <!-- vorgaben -->
+    <table mat-table #tableVorgabe class="prodvorg-table">
+
+      <!-- Checkbox Column -->
+      <ng-container matColumnDef="select">
+        <th mat-header-cell *matHeaderCellDef>
+          <mat-checkbox (change)="$event ? toggleAllRowsVorg() : null"
+            [checked]="selectionVorg.hasValue() && isAllSelectedVorg()"
+            [indeterminate]="selectionVorg.hasValue() && !isAllSelectedVorg()" [aria-label]="checkboxLabelVorg()"
+            [disabled]="checkIfDisabled()">
+          </mat-checkbox>
+        </th>
+        <td mat-cell *matCellDef="let row">
+          <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selectionVorg.toggle(row) : null"
+            [checked]="selectionVorg.isSelected(row)" [aria-label]="checkboxLabelVorg(row)"
+            [disabled]="checkIfDisabled()">
+          </mat-checkbox>
+        </td>
+      </ng-container>
+
+      <!-- prodlotlieferant Column -->
+      <ng-container matColumnDef="zellstoffkatname">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>
+          ZellstoffSorte
+        </th>
+        <td mat-cell *matCellDef="let row">{{row.zellstoffkatname}}</td>
+      </ng-container>
+      <!-- referenznr Column -->
+      <ng-container matColumnDef="menge">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>
+          Menge in kg
+        </th>
+        <td mat-cell *matCellDef="let row">{{row.menge}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="add">
+        <th mat-header-cell *matHeaderCellDef>
+          <button mat-mini-fab (click)="addVorgabe()" [disabled]="this.data.prodprog.beendet == 1">
+            <mat-icon>add</mat-icon>
+          </button>
+          <button mat-mini-fab [disabled]="checkIfDisabledVorg()"
+            (click)="deleteVorgabe()"><mat-icon>delete</mat-icon></button>
+        </th>
+        <td mat-cell *matCellDef="let row">
+          <button mat-mini-fab (click)="editVorgabe(row)"
+            [disabled]="this.data.prodprog.beendet == 1"><mat-icon>edit</mat-icon></button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumnsVorg"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumnsVorg;"></tr>
+    </table>
+    <!-- Zuordnungen -->
+  </mat-grid-tile>
+  <mat-grid-tile [rowspan]="4" class="top-center">
+    <table mat-table #tableZuord class="prodzuord-table">
+
+      <!-- Checkbox Column -->
+      <ng-container matColumnDef="select">
+        <th mat-header-cell *matHeaderCellDef>
+          <mat-checkbox (change)="$event ? toggleAllRowsZuord() : null"
+            [checked]="selectionZuord.hasValue() && isAllSelectedZuord()"
+            [indeterminate]="selectionZuord.hasValue() && !isAllSelectedZuord()" [aria-label]="checkboxLabelZuord()"
+            [disabled]="checkIfDisabled()">
+          </mat-checkbox>
+        </th>
+        <td mat-cell *matCellDef="let row">
+          <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selectionZuord.toggle(row) : null"
+            [checked]="selectionZuord.isSelected(row)" [aria-label]="checkboxLabelZuord(row)"
+            [disabled]="checkIfDisabled()">
+          </mat-checkbox>
+        </td>
+      </ng-container>
+
+      <!-- prodlotlieferant Column -->
+      <ng-container matColumnDef="lsnr">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>
+          Bestellnummer
+        </th>
+        <td mat-cell *matCellDef="let row">{{row.lsnr}}</td>
+      </ng-container>
+      <!-- referenznr Column -->
+      <ng-container matColumnDef="referenznr">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>
+          Referenznummer
+        </th>
+        <td mat-cell *matCellDef="let row">{{row.referenznr}}</td>
+      </ng-container>
+      <!-- verifikationsnr Column -->
+      <ng-container matColumnDef="verifnr">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>
+          Verifikationsnummer
+        </th>
+        <td mat-cell *matCellDef="let row">{{row.verifnr}}</td>
+      </ng-container>
+      <!-- Menge Column -->
+      <ng-container matColumnDef="menge">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>
+          Menge in kg
+        </th>
+        <td mat-cell *matCellDef="let row">{{row.menge}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="add">
+        <th mat-header-cell *matHeaderCellDef>
+          <button mat-mini-fab (click)="addZuord()" [disabled]="this.data.prodprog.beendet == 1">
+            <mat-icon>add</mat-icon>
+          </button>
+          <button mat-mini-fab [disabled]="checkIfDisabledZuord()"
+            (click)="deleteZuord()"><mat-icon>delete</mat-icon></button>
+        </th>
+        <td mat-cell *matCellDef="let row">
+          <button mat-mini-fab (click)="editZuord(row)"
+            [disabled]="this.data.prodprog.beendet == 1"><mat-icon>edit</mat-icon></button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumnsZuord"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumnsZuord;"></tr>
+    </table>
+  </mat-grid-tile>
+</mat-grid-list>
+<mat-dialog-actions align="end">
+  <button mat-raised-button [disabled]="checkIfDisabled()" (click)="zuordnen()">Zuordnen</button>
+  <button mat-raised-button [disabled]="checkIfDisabled()" (click)="exportProdprog()">Exportieren</button>
+  <button mat-raised-button (click)="speichern()">Speichern</button>
+  <button mat-raised-button mat-dialog-close cdkFocusInitial (click)="this.dialogRef.close(false)">Abbrechen</button>
+</mat-dialog-actions>

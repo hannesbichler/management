@@ -1,0 +1,10 @@
+<div mat-dialog-content>
+  <p>Möchten Sie die EUdrs löschen?</p>
+  <li *ngFor="let eudr of data.eudrs">
+    {{eudr.referenznr}} - {{eudr.verifnr}}
+  </li>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="yes()">Ja</button>
+  <button mat-button cdkFocusInitial (click)="no()">Nein</button>
+</div>

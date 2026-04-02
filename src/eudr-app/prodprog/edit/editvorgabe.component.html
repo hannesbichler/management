@@ -1,0 +1,24 @@
+<h2 mat-dialog-title>{{this.data.caption}}</h2>
+<mat-dialog-content class="mat-typography">
+  <mat-grid-list cols="2" rowHeight="3:1">
+    <mat-grid-tile>
+          <mat-form-field>
+            <mat-label>Zellstoffsorte</mat-label>
+            <mat-select [(value)]="this.data.vorgabe.zellstoff" [compareWith]="compareFnZellstoff">
+              <mat-option *ngFor='let kat of (kategorien$ | async)?.items' [value]="kat">{{kat.name}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </mat-grid-tile>
+    <mat-grid-tile>
+      <mat-form-field  >
+        <mat-label>Menge</mat-label>
+        <input matInput placeholder="Menge" [(ngModel)]="this.data.vorgabe.menge" type="number"/>
+      </mat-form-field>
+    </mat-grid-tile>
+  </mat-grid-list>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-raised-button (click)="this.dialogRef.close(true)">Speichern</button>
+  <button mat-raised-button mat-dialog-close cdkFocusInitial (click)="this.dialogRef.close(false)">Abbrechen</button>
+</mat-dialog-actions>

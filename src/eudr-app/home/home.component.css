@@ -1,0 +1,132 @@
+.home-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  padding: 2rem;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.header h1 {
+  color: #2c3e50;
+  font-size: 2.5rem;
+  margin: 0 0 0.5rem 0;
+  font-weight: 300;
+}
+
+.header p {
+  color: #7f8c8d;
+  font-size: 1.2rem;
+  margin: 0;
+}
+
+.columns-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.column {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.column:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+}
+
+.column.clickable:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+}
+
+.column-header {
+  background: linear-gradient(135deg, #646569 0%, #c9c3cf 100%);
+  padding: 1.5rem;
+  color: white;
+}
+
+.column-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 400;
+}
+
+.column-content {
+  padding: 1.5rem;
+}
+
+.column-content p {
+  color: #555;
+  margin: 0 0 1rem 0;
+  line-height: 1.6;
+}
+
+.column-content ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.column-content li {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #ecf0f1;
+  color: #666;
+}
+
+.column-content li:last-child {
+  border-bottom: none;
+}
+
+.column-content li:before {
+  content: "✓";
+  color: #27ae60;
+  font-weight: bold;
+  margin-right: 0.5rem;
+}
+
+/* CSS Property Override Examples */
+
+/* 1. Higher specificity override */
+.column-content li.missing:before {
+  content: "✗";
+  color: #dc3545 !important;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .home-container {
+    padding: 1rem;
+  }
+
+  .header h1 {
+    font-size: 2rem;
+  }
+
+  .columns-container {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .column-content {
+    padding: 1rem;
+  }
+}
+
+.action-buttons {
+  margin-top: auto;
+  padding-top: 1rem;
+}
+
+.action-buttons button {
+  width: 100%;
+}

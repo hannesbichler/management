@@ -1,0 +1,24 @@
+<div class="sidenav" [ngClass]="isLeftSidebarCollapsed ? 'sidenav-collapsed' : ''">
+  <div class="logo-container">
+    <button class="logo" (click)="toggleCollapse()">
+      <i class="fal fa-bars"></i>
+    </button>
+    <div class="logo-text" *ngIf="!isLeftSidebarCollapsed"></div>
+  </div>
+
+  <nav class="sidenav-nav">
+    <ul>
+      <li *ngFor="let item of items; let i = index" class="sidenav-nav-item">
+        <a
+          class="sidenav-nav-link"
+          [routerLink]="item.routeLink"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+        >
+          <i class="sidenav-link-icon" [class]="item.icon"></i>
+          <span class="sidenav-link-text" *ngIf="!isLeftSidebarCollapsed">{{ item.label }}</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+</div>

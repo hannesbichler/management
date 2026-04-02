@@ -1,0 +1,33 @@
+<h2 mat-dialog-title>{{this.data.caption}}</h2>
+<mat-dialog-content class="mat-typography">
+  <mat-grid-list cols="5" rowHeight="3:1">
+    <mat-grid-tile colspan="4">
+      <mat-form-field style="width: 700px;">
+        <mat-label>Eudrs</mat-label>
+        <mat-select [(value)]="this.data.zuord" [compareWith]="compareFnEudrs"
+          (selectionChange)="updateMaxValue($event.value.menge, $event.value.menge)">
+          <ng-container *ngIf="zuordVorgaben$?.items?.length; else noVorgaben">
+            <mat-option *ngFor='let eudr of zuordVorgaben$?.items' [value]="eudr">{{eudr.prodlotlieferant}} -
+              {{eudr.referenznr}} - {{eudr.verifnr}} - max {{eudr.menge}} kg</mat-option>
+          </ng-container>
+          <ng-template #noVorgaben>
+            <mat-option disabled>Keine EUDRs aus Lieferungen verfügbar</mat-option>
+          </ng-template>
+
+        </mat-select>
+      </mat-form-field>
+    </mat-grid-tile>
+    <mat-grid-tile>
+      <mat-form-field>
+        <mat-label>Menge</mat-label>
+        <input matInput placeholder="Menge" [(ngModel)]="this.actValue" [min]="0" [max]="this.maxValue" type="number"
+          name="amount" />
+      </mat-form-field>
+    </mat-grid-tile>
+  </mat-grid-list>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-raised-button (click)="this.closeDialog(true)">Speichern</button>
+  <button mat-raised-button mat-dialog-close cdkFocusInitial (click)="this.closeDialog(false)">Abbrechen</button>
+</mat-dialog-actions>

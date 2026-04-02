@@ -1,0 +1,21 @@
+<h2 mat-dialog-title>Preview: {{ data.file.name }}</h2>
+<div mat-dialog-content>
+  <ng-container *ngIf="isImage">
+    <img [src]="previewUrl" class="preview-image" />
+  </ng-container>
+
+  <ng-container *ngIf="isPdf">
+    <iframe [src]="previewUrl | safeUrl" class="preview-frame"></iframe>
+  </ng-container>
+
+  <ng-container *ngIf="isText">
+    <pre class="preview-text">{{ textContent }}</pre>
+  </ng-container>
+
+  <ng-container *ngIf="!isImage && !isPdf && !isText">
+    <p>No preview available for this file type.</p>
+  </ng-container>
+</div>
+<div mat-dialog-actions>
+  <button mat-button mat-dialog-close (click)="this.dialogRef.close()">Close</button>
+</div>

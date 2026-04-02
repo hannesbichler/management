@@ -1,0 +1,60 @@
+<h2 mat-dialog-title>{{this.data.caption}}</h2>
+<mat-dialog-content class="mat-typography">
+  <mat-grid-list cols="3" rowHeight="3:1">
+    <mat-grid-tile>
+      <mat-form-field >
+        <mat-label>Name</mat-label>
+        <input matInput placeholder="Name" [(ngModel)]="this.data.lieferant.name" required/>
+      </mat-form-field>
+    </mat-grid-tile>
+    <mat-grid-tile>
+      <mat-form-field  >
+        <mat-label>Eori</mat-label>
+        <input matInput placeholder="Eori" [(ngModel)]="this.data.lieferant.eori"/>
+      </mat-form-field>
+    </mat-grid-tile>
+    <mat-grid-tile>
+      <mat-form-field  >
+        <mat-label>Uid</mat-label>
+        <input matInput placeholder="Uid" [(ngModel)]="this.data.lieferant.uid"/>
+      </mat-form-field>
+    </mat-grid-tile>
+    <mat-grid-tile>
+      <mat-form-field  >
+        <mat-label>Strasse</mat-label>
+        <input matInput placeholder="Strasse" [(ngModel)]="this.data.lieferant.address"/>
+      </mat-form-field>
+    </mat-grid-tile>
+    <mat-grid-tile>
+      <mat-form-field  >
+        <mat-label>Strasse Zusatz</mat-label>
+        <input matInput placeholder="Strasse Zusatz" [(ngModel)]="this.data.lieferant.address_add"/>
+      </mat-form-field>
+    </mat-grid-tile>
+    <mat-grid-tile>
+      <mat-form-field  >
+        <mat-label>PLZ</mat-label>
+        <input matInput placeholder="PLZ" [(ngModel)]="this.data.lieferant.zip"/>
+      </mat-form-field>
+    </mat-grid-tile>
+    <mat-grid-tile>
+      <mat-form-field  >
+        <mat-label>Stadt</mat-label>
+        <input matInput placeholder="Stadt" [(ngModel)]="this.data.lieferant.city"/>
+      </mat-form-field>
+    </mat-grid-tile>
+    <mat-grid-tile>
+      <mat-form-field  >
+        <mat-label>Land</mat-label>
+        <input matInput placeholder="Land" [(ngModel)]="this.data.lieferant.country"/>
+      </mat-form-field>
+    </mat-grid-tile>
+    <mat-grid-tile>
+    </mat-grid-tile>
+  </mat-grid-list>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-raised-button (click)="this.dialogRef.close(true)">Speichern</button>
+  <button mat-raised-button mat-dialog-close cdkFocusInitial (click)="this.dialogRef.close(false)">Abbrechen</button>
+</mat-dialog-actions>

@@ -1,0 +1,10 @@
+<div mat-dialog-content>
+  <p>Möchten Sie die Lieferungen und die dazugehörenden Eudrs löschen?</p>
+  <li *ngFor="let lieferung of data.lieferungen">
+    {{lieferung.lsnr}} - {{lieferung.lsnrlieferant}} - {{lieferung.lieferantname}} - {{lieferung.prodname}} - {{lieferung.zellstoff.name}} - {{lieferung.menge}} kg
+  </li>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="this.dialogRef.close(true)">Ja</button>
+  <button mat-button cdkFocusInitial (click)="this.dialogRef.close(false)">Nein</button>
+</div>
